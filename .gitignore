@@ -64,3 +64,6 @@ package-lock.json
 .eslintcache
 *v8.log
 /lib/
+# mattpocock/skills, installed into the working tree at VM startup by the dev environment install script
+/.agents/
+/skills-lock.json

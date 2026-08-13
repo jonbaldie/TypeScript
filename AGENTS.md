@@ -28,3 +28,20 @@ If asked to make code changes or create a PR in this repository, you **MUST**:
 ---
 
 For detailed build instructions, test writing guides, and workflow recommendations, see [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
+
+## Cursor Cloud specific instructions
+
+Node.js and `npm` are preinstalled, and dependencies are refreshed automatically via the startup update script (`npm ci`). No extra system packages are needed for building/linting/testing the compiler (the Go/pprof/Graphviz tooling from `.devcontainer` is only for profiling and is not required).
+
+Standard task commands are already documented in [`.github/copilot-instructions.md`](.github/copilot-instructions.md) (build, tests, lint, format via `npx hereby ...`). Use those; don't duplicate them.
+
+### mattpocock/skills
+
+The dev environment install script also installs [`mattpocock/skills`](https://github.com/mattpocock/skills) into the working tree at VM startup, via `npx --yes skills@latest add mattpocock/skills --agent cursor --skill '*' -y`. This writes ~35 skills to `.agents/skills/<name>/SKILL.md` (a directory Cursor auto-discovers) plus a `skills-lock.json`. Both paths are git-ignored (they are provisioned per-VM at startup, not committed). Because the install runs before the agent session starts, these skills are available to the agent each session. To run once per repo, invoke `/setup-matt-pocock-skills`.
+
+Non-obvious gotchas:
+
+- The dev build output lives in `built/local/` (e.g. `built/local/tsc.js`, `built/local/tsserver.js`), produced by `npx hereby local`. Run the compiler you just built with `node built/local/tsc.js <args>`.
+- Do NOT use the `bin/tsc` / `bin/tsserver` wrappers to test local changes — they resolve to `lib/tsc.js`, which is the published/packaged build and is absent on a fresh clone (you'll get `Cannot find module '../lib/tsc.js'`).
+- A full `npx hereby runtests-parallel` run takes ~10-15 minutes. For quick verification, scope with `npx hereby runtests --tests=<path>` after `npx hereby tests`.
+- Source files typically use CRLF line endings; keep them consistent when editing.
