@@ -35,6 +35,10 @@ Node.js and `npm` are preinstalled, and dependencies are refreshed automatically
 
 Standard task commands are already documented in [`.github/copilot-instructions.md`](.github/copilot-instructions.md) (build, tests, lint, format via `npx hereby ...`). Use those; don't duplicate them.
 
+### mattpocock/skills
+
+The dev environment install script also installs [`mattpocock/skills`](https://github.com/mattpocock/skills) into the working tree at VM startup, via `npx --yes skills@latest add mattpocock/skills --agent cursor --skill '*' -y`. This writes ~35 skills to `.agents/skills/<name>/SKILL.md` (a directory Cursor auto-discovers) plus a `skills-lock.json`. Both paths are git-ignored (they are provisioned per-VM at startup, not committed). Because the install runs before the agent session starts, these skills are available to the agent each session. To run once per repo, invoke `/setup-matt-pocock-skills`.
+
 Non-obvious gotchas:
 
 - The dev build output lives in `built/local/` (e.g. `built/local/tsc.js`, `built/local/tsserver.js`), produced by `npx hereby local`. Run the compiler you just built with `node built/local/tsc.js <args>`.
